@@ -51,20 +51,22 @@ public class PlayerMove : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && onGround)
-        {
-            rd.AddForce(Vector2.up * jumpForce);
-        }
+        //Прыжок на Space
+        //if (Input.GetKeyDown(KeyCode.Space) && onGround)
+        //{
+        //    rd.AddForce(Vector2.up * jumpForce);
+        //}
 
         if (Input.GetKeyDown(KeyCode.UpArrow) && onGround)
         {
             rd.AddForce(Vector2.up * jumpForce);
         }
 
-        if (Input.GetKeyDown(KeyCode.W) && onGround)
-        {
-            rd.AddForce(Vector2.up * jumpForce);
-        }
+        //Прыжок на W
+        //if (Input.GetKeyDown(KeyCode.W) && onGround)
+        //{
+        //    rd.AddForce(Vector2.up * jumpForce);
+        //}
     }
 
     public bool onGround;

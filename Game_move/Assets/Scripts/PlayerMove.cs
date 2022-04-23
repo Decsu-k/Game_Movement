@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public Rigidbody2D rd;
+    public Rigidbody2D rb;
     public Animator anim;
     public SpriteRenderer sr;
 
     void Start()
     {
-        rd = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         GroundCheckRadius = GroundCheck.GetComponent<CircleCollider2D>().radius;
@@ -25,13 +25,11 @@ public class PlayerMove : MonoBehaviour
         Jump();
         CheckingGround();
         SquatCheck();
-        CheckingLadder();
 
+        CheckingLadder();
         LaddersMechanics();
         LadderUpDown();
         LADDERS();
-        CorrectLader();
-
     }
 
     public Vector2 moveVector;
@@ -42,7 +40,7 @@ public class PlayerMove : MonoBehaviour
     {
         moveVector.x = Input.GetAxisRaw("Horizontal");
         anim.SetFloat("moveX", Mathf.Abs(moveVector.x));
-        rd.velocity = new Vector2(moveVector.x * speed, rd.velocity.y);
+        rb.velocity = new Vector2(moveVector.x * speed, rb.velocity.y);
     }
 
     void Reflect()
@@ -63,16 +61,17 @@ public class PlayerMove : MonoBehaviour
         //Прыжок на X
         if (Input.GetKeyDown(KeyCode.X) && (onGround || (++jumpCount < maxJumpValue)) && !jumpLock)
         {
-            rd.AddForce(Vector2.up * jumpForce);
+            rb.AddForce(Vector2.up * jumpForce);
         }
 
         if (onGround) { jumpCount = 0; }
     }
 
+    //Проверка земли
     public bool onGround;
     public Transform GroundCheck;
-    public float checkRadius = 0.5f;
     public LayerMask Ground;
+    public float checkRadius = 0.5f;
     private float GroundCheckRadius;
 
     void CheckingGround()
@@ -83,12 +82,13 @@ public class PlayerMove : MonoBehaviour
 
 
     public Transform TopCheck;
-    private float TopCheckRadius;
     public LayerMask Roof;
     public Collider2D poseStand;
     public Collider2D poseSquat;
+    private float TopCheckRadius;
     private bool jumpLock = false;
 
+    //Ползанье
     void SquatCheck()
     {
         if (Input.GetKey(KeyCode.DownArrow) && onGround)
@@ -107,38 +107,35 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+
     public float check_RADIUS = 0.04f;
-    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(CHECK_Ladder.position, check_RADIUS);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(bottom_Ladder.position, check_RADIUS);
     }
 
     public Transform CHECK_Ladder;
     public bool checkedLadder;
     public LayerMask LadderMask;
-    public Transform bottom_Ladder;
-    public bool bottomCheckedLadder;
-
     void CheckingLadder()
     {
         checkedLadder = Physics2D.OverlapPoint(CHECK_Ladder.position, LadderMask);
-        bottomCheckedLadder = Physics2D.OverlapPoint(bottom_Ladder.position, LadderMask);
+        
     }
+
 
     public float ladderSpeed = 1.5f;
     void LaddersMechanics()
     {
-        if (onLadder) 
-        { 
-            rd.bodyType = RigidbodyType2D.Kinematic;
-            rd.velocity = new Vector2(rd.velocity.x, moveVector.y * ladderSpeed);
+        if (onLadder)
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.velocity = new Vector2(rb.velocity.x, moveVector.y * ladderSpeed);
         }
-        else { rd.bodyType = RigidbodyType2D.Dynamic; }
+        else { rb.bodyType = RigidbodyType2D.Dynamic; }
     }
+
 
     void LadderUpDown()
     {
@@ -146,38 +143,19 @@ public class PlayerMove : MonoBehaviour
         anim.SetFloat("moveY", moveVector.y);
     }
 
-    float vertInput;
+
     public bool onLadder;
     void LADDERS()
     {
-        vertInput = Input.GetAxisRaw("Vertical");
-        if (checkedLadder || bottomCheckedLadder)
+        if (checkedLadder && Input.GetAxisRaw("Vertical") != 0)
         {
-            if (!checkedLadder && bottomCheckedLadder) // Персонаж сверху
-            {
-                if (vertInput > 0) { onLadder = false; }
-                else if (vertInput < 0) { onLadder = true; }
-            }
-            else if (checkedLadder && bottomCheckedLadder) //Персонаж на лестнице
-            {
-                if (vertInput > 0) { onLadder = true; }
-                else if (vertInput < 0) { onLadder = true; }
-            }
-            else if (checkedLadder && !bottomCheckedLadder) //Персонаж снизу
-            {
-                if (vertInput > 0) { onLadder = true; }
-                else if (vertInput < 0) { onLadder = false; }
-            }
+            onLadder = true;
         }
-        else { onLadder = false; }
-        LaddersMechanics();
+        else if (!checkedLadder)
+        {
+            onLadder = false;
+        }
+
         anim.SetBool("onLadder", checkedLadder);
-        
-    }
-    bool corrected = true;
-    void CorrectLader()
-    {
-        if (onLadder && corrected) { corrected = !corrected; Debug.Log("Корректировка"); }
-        else if (!onLadder && !corrected) { corrected = true; }
     }
 }

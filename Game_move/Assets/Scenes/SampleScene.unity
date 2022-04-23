@@ -1192,7 +1192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e31e09afd3eac4d8907dd044a0e43c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rd: {fileID: 0}
+  rb: {fileID: 0}
   anim: {fileID: 0}
   sr: {fileID: 0}
   moveVector: {x: 0, y: 0}
@@ -1203,10 +1203,10 @@ MonoBehaviour:
   maxJumpValue: 1
   onGround: 0
   GroundCheck: {fileID: 1190746273}
-  checkRadius: 0.3
   Ground:
     serializedVersion: 2
     m_Bits: 8
+  checkRadius: 0.3
   TopCheck: {fileID: 757374900}
   Roof:
     serializedVersion: 2
@@ -1219,8 +1219,6 @@ MonoBehaviour:
   LadderMask:
     serializedVersion: 2
     m_Bits: 64
-  bottom_Ladder: {fileID: 1669355448}
-  bottomCheckedLadder: 0
   ladderSpeed: 1.5
   onLadder: 0
 --- !u!95 &495520748

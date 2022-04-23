@@ -156,6 +156,6 @@ public class PlayerMove : MonoBehaviour
             onLadder = false;
         }
 
-        anim.SetBool("onLadder", checkedLadder);
+        anim.SetBool("onLadder", onLadder);
     }
 }
